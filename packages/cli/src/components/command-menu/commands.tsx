@@ -1,4 +1,5 @@
-import { ThemeDialogContent } from "../../dialog";
+
+import { ThemeDialogContent } from "../dialog";
 import type { Command } from "./types"
 
 export const COMMANDS: Command[] = [
