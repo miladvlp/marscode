@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useDialog } from "../provider/dialog";
-import { useTheme } from "../provider/theme";
-import { THEMES, type Theme } from "../theme";
-import { DialogSearchList } from "../components/dialog-search-list";
+import { useDialog } from "../../provider/dialog";
+import { useTheme } from "../../provider/theme";
+import { THEMES, type Theme } from "../../theme";
+import { DialogSearchList } from "../dialog-search-list";
+
 
 
 
