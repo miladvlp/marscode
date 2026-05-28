@@ -4,7 +4,6 @@ import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { db } from "@marscode/database/client";
 import { Role, Mode, MessageStatus } from "@marscode/database/enums";
-import { findSupportedChatModel } from "@marscode/shared";
 
 const createSessionSchema = z.object({
   title: z.string(),
@@ -15,7 +14,7 @@ const createSessionSchema = z.object({
       content: z.string(),
       mode: z.enum(Mode),
       model: z.string()
-        .refine((id) => !!findSupportedChatModel(id), "Unsupported model"),
+        .min(1, "Invalid model"),
     })
     .optional(),
 });

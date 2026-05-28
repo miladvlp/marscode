@@ -2,7 +2,6 @@ import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import {
   findSupportedChatModel,
   type SupportedChatModel,
-  type SupportedChatModelId,
   type SupportedProvider,
 } from "@marscode/shared";
 import type { LanguageModel } from "ai";
@@ -14,7 +13,7 @@ const OPENROUTER_MODEL_IDS = {
   "gpt-5.5": "openai/gpt-5.5",
   "gpt-5.4-mini": "openai/gpt-5.4-mini",
   "gpt-5.4-nano": "openai/gpt-5.4-nano",
-} satisfies Record<SupportedChatModelId, string>;
+} satisfies Record<SupportedChatModel["id"], string>;
 
 const openrouter = createOpenRouter({
   apiKey: process.env.OPENROUTER_API_KEY,
@@ -23,8 +22,8 @@ const openrouter = createOpenRouter({
 
 export type ResolvedModel = {
   model: LanguageModel;
-  provider: SupportedProvider;
-  modelId: SupportedChatModelId;
+  provider: SupportedProvider | "openrouter";
+  modelId: string;
   openRouterModelId: string;
 };
 
@@ -47,15 +46,23 @@ function resolveOpenRouterModel(model: SupportedChatModel): ResolvedModel {
   };
 };
 
-export function isSupportedChatModel(modelId: string): modelId is SupportedChatModelId {
-  return findSupportedChatModel(modelId) != null;
+export function isValidChatModel(modelId: string): boolean {
+  return modelId.trim().length > 0;
 };
 
 export function resolveChatModel(modelId: string): ResolvedModel {
   const model = findSupportedChatModel(modelId);
-  if (!model) {
-    throw new Error(`Unsupported model: ${modelId}`);
+
+  if (model) {
+    return resolveOpenRouterModel(model);
   }
 
-  return resolveOpenRouterModel(model);
+  assertOpenRouterApiKey();
+
+  return {
+    model: openrouter(modelId),
+    provider: "openrouter",
+    modelId,
+    openRouterModelId: modelId,
+  };
 };

@@ -5,6 +5,7 @@ import { ThemeProvider } from "../provider/theme";
 import { ToastProvider } from "../provider/toast";
 import { KeyboardLayerProvider } from "../provider/keyboard-layer";
 import { DialogProvider } from "../provider/dialog";
+import { PromptConfigProvider } from "../provider/prompt-config";
 
 export function RootLayout() {
     return (
@@ -12,9 +13,11 @@ export function RootLayout() {
             <ToastProvider>
                 <KeyboardLayerProvider>
                     <DialogProvider>
-                        <ThemedRoot>
-                            <Outlet />
-                        </ThemedRoot>
+                        <PromptConfigProvider>
+                            <ThemedRoot>
+                                <Outlet />
+                            </ThemedRoot>
+                        </PromptConfigProvider>
                     </DialogProvider>
                 </KeyboardLayerProvider>
             </ToastProvider>

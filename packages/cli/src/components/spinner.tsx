@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "../provider/theme";
+import { Mode } from "@marscode/database/enums";
+
+
+type Props = {
+  mode?: Mode;
+};
 
 const FRAMES = [
   "10101010",
@@ -10,9 +16,11 @@ const FRAMES = [
   "00110011",
 ];
 
-export function Spinner() {
+export function Spinner({ mode = Mode.BUILD }: Props) {
   const { colors } = useTheme();
   const [frameIndex, setFrameIndex] = useState(0);
+  const activeColor = mode === Mode.PLAN ? colors.planMode : colors.primary;
+
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,5 +32,5 @@ export function Spinner() {
     return () => clearInterval(interval);
   }, []);
 
-  return <text fg={colors.primary}>{FRAMES[frameIndex]}</text>;
+  return <text fg={activeColor}>{FRAMES[frameIndex]}</text>;
 }
