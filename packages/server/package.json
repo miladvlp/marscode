@@ -6,12 +6,18 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "dev": "bun run --hot src/index.ts"
+    "dev": "bun run --hot src/index.ts",
+    "build": "bun build src/index.ts --outdir dist --target bun",
+    "postinstall": "bun run --cwd ../database db:generate"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.8.0",
     "@marscode/database": "workspace:*",
     "@marscode/shared": "workspace:*",
+    "@openrouter/ai-sdk-provider": "^2.9.0",
+    "@sentry/bun": "^10.54.0",
+    "@sentry/hono": "^10.54.0",
+    "ai": "^6.0.191",
     "dotenv": "^17.4.2",
     "hono": "^4.12.23",
     "zod": "^4.4.3"
