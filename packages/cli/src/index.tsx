@@ -22,8 +22,13 @@ function App() {
   return <RouterProvider router={router} />
 }
 
+process.env.OPENTUI_FORCE_WCWIDTH ??= "1";
+
 const renderer = await createCliRenderer({
   targetFps: 60,
   exitOnCtrlC: false,
+  useKittyKeyboard: {
+    reportText: true,
+  },
 });
 createRoot(renderer).render(<App />);
