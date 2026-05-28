@@ -64,9 +64,10 @@ export const SUPPORTED_CHAT_MODELS = [
 
 export type SupportedChatModel = (typeof SUPPORTED_CHAT_MODELS)[number];
 export type SupportedChatModelId = SupportedChatModel["id"];
+export type ChatModelId = string;
 
 export function findSupportedChatModel(modelId: string) {
   return SUPPORTED_CHAT_MODELS.find((model) => model.id === modelId);
 }
 
-export const DEFAULT_CHAT_MODEL_ID: SupportedChatModelId = "gpt-5.5";
+export const DEFAULT_CHAT_MODEL_ID: ChatModelId = "gpt-5.5";

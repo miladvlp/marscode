@@ -6,7 +6,7 @@ import { UserMessage } from "../components/messages";
 import { apiClient } from "../lib/api-client";
 import { getErrorMessage } from "../lib/http-errors";
 import { useToast } from "../provider/toast";
-import { DEFAULT_CHAT_MODEL_ID } from "@marscode/shared";
+import { usePromptConfig } from "../provider/prompt-config";
 
 const newSessionStateSchema = z.object({
   message: z.string(),
@@ -16,6 +16,7 @@ export function NewSession() {
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
+  const { mode, model } = usePromptConfig();
   const hasStartedRef = useRef(false);
 
   const state = useMemo(() => {
@@ -46,8 +47,8 @@ export function NewSession() {
             initialMessage: {
               role: "USER",
               content: state.message,
-              mode: "BUILD",
-              model: DEFAULT_CHAT_MODEL_ID,
+              mode,
+              model,
             },
           },
         });
@@ -75,7 +76,7 @@ export function NewSession() {
     return () => {
       ignore = true;
     };
-  }, [state, navigate, toast]);
+  }, [state, navigate, toast, mode, model]);
 
   if (!state) return null;
 

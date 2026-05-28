@@ -3,7 +3,7 @@ import { useParams, useLocation, useNavigate } from "react-router";
 import { z } from "zod";
 import { useKeyboard } from "@opentui/react";
 import prettyMs from "pretty-ms";
-import { DEFAULT_CHAT_MODEL_ID, type SupportedChatModelId } from "@marscode/shared";
+import type { ChatModelId } from "@marscode/shared";
 import type { InferResponseType } from "hono/client";
 import { SessionShell } from "../components/session-shell";
 import { 
@@ -19,6 +19,7 @@ import { getErrorMessage } from "../lib/http-errors";
 import { MessageStatus } from "@marscode/database/enums";
 import { useKeyboardLayer } from "../provider/keyboard-layer";
 import { useToast } from "../provider/toast";
+import { usePromptConfig } from "../provider/prompt-config";
 
 
 type SessionData = InferResponseType<(typeof apiClient.sessions)[":id"]["$get"], 200>;
@@ -39,7 +40,7 @@ function mapDbMessages(dbMessages: SessionData["messages"]): Message[] {
         role: "user",
         content: m.content,
         mode: m.mode,
-        model: m.model as SupportedChatModelId,
+        model: m.model as ChatModelId,
       };
     }
 
@@ -47,7 +48,7 @@ function mapDbMessages(dbMessages: SessionData["messages"]): Message[] {
       id: m.id,
       role: "assistant",
       content: m.content,
-      model: m.model as SupportedChatModelId,
+      model: m.model as ChatModelId,
       mode: m.mode,
       parts: [{ type: "text", text: m.content }],
       ...(m.duration != null ? { duration: prettyMs(m.duration * 1000) } : {}),
@@ -84,6 +85,7 @@ function ChatMessage(
 function SessionChat({ session }: { session: SessionData }) {
   const [initialMessages] = useState(() => mapDbMessages(session.messages));
   const { isTopLayer } = useKeyboardLayer();
+  const { mode, model } = usePromptConfig();
   const { messages, streaming, submit, abort, interrupt } = useChat(session.id, initialMessages);
 
   // Stop the pending reply when the user leaves this session.
@@ -102,7 +104,7 @@ function SessionChat({ session }: { session: SessionData }) {
   return (
     <SessionShell
       onSubmit={(text) =>
-        submit({ userText: text, mode: "BUILD", model: DEFAULT_CHAT_MODEL_ID })
+        submit({ userText: text, mode, model })
       }
       loading={streaming.status === "streaming"}
       interruptible={streaming.status === "streaming"}

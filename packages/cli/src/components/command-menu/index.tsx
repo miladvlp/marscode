@@ -13,7 +13,7 @@ const COMMAND_COL_WITH = Math.max(...COMMANDS.map((cmd) => cmd.name.length)) + 4
 type CommandMenuProps = {
 
     query: string,
-    selectedIbndex: number,
+    selectedIndex: number,
     scrollRef: RefObject<ScrollBoxRenderable | null>,
     onSelect: (index: number) => void,
     onExecute: (index: number) => void
@@ -21,7 +21,7 @@ type CommandMenuProps = {
 
 export function CommandMenu({
     query,
-    selectedIbndex,
+    selectedIndex,
     scrollRef,
     onSelect,
     onExecute,
@@ -42,7 +42,7 @@ export function CommandMenu({
     return (
         <scrollbox ref={scrollRef} height={visibleHeight}>
             {filtered.map((cmd, i) => {
-                const isSelected = i === selectedIbndex;
+                const isSelected = i === selectedIndex;
 
                 return (
                     <box key={cmd.value} flexDirection="row"
@@ -58,7 +58,7 @@ export function CommandMenu({
                         <box flexGrow={1} flexShrink={1}
                             overflow="hidden">
                             <text selectable={false} fg={isSelected ? "black" : "gray"}>
-                                {cmd.describtion}
+                                {cmd.description}
                             </text>
                         </box>
                     </box>

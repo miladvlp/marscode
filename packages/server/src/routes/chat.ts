@@ -6,13 +6,13 @@ import { streamText as aiStreamText } from "ai";
 import { db } from "@marscode/database/client";
 import { Mode, MessageStatus } from "@marscode/database/enums";
 import { type ChatStreamEvent } from "@marscode/shared";
-import { isSupportedChatModel, resolveChatModel } from "../lib/models";
+import { isValidChatModel, resolveChatModel } from "../lib/models";
 
 
 const submitSchema = z.object({
   content: z.string(),
   mode: z.enum(Mode),
-  model: z.string().refine(isSupportedChatModel, "Unsupported model"),
+  model: z.string().refine(isValidChatModel, "Invalid model"),
 });
 
 const submitValidator = zValidator("json", submitSchema, (result, c) => {
@@ -178,9 +178,9 @@ const app = new Hono()
       return c.json({ error: "Session has no pending user message to resume" }, 409);
     }
 
-    if (!isSupportedChatModel(resumableMessage.model)) {
+    if (!isValidChatModel(resumableMessage.model)) {
       return c.json({ 
-        error: `Session uses unsupported model: ${resumableMessage.model}`
+        error: `Session uses invalid model: ${resumableMessage.model}`
       }, 409);
     }
 
