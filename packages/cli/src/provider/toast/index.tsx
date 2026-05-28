@@ -12,7 +12,6 @@ import type { ToastOptions, ToastVariant } from "./types";
 import { DEFAULT_DURATION } from "./types";
 import { SplitBorderChars } from "../../components/border";
 import { useTheme } from "../theme";
-// import { useTheme } from "../theme";
 
 export type ToastContextValue = {
   show: (options: ToastOptions) => void;
@@ -60,7 +59,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
     }, duration).unref();
   }, [clearCurrentTimeout]);
 
-    const value = useMemo(() => ({ show }), [show]);
+  const value = useMemo(() => ({ show }), [show]);
 
   return (
     <ToastContext.Provider value={value}>
@@ -74,10 +73,9 @@ type ToastProps = {
   currentToast: ToastOptions | null;
 };
 
-
 function Toast({ currentToast }: ToastProps) {
   const { width } = useTerminalDimensions();
-const { colors } = useTheme();
+  const { colors } = useTheme();
 
   if (!currentToast) {
     return null;
